@@ -7,6 +7,18 @@ webcam image input directly in the terminal.
 
 See GitHub releases for prebuilt binaries.
 
+### Building from source
+
+Requirements:
+
+- `vcpkg` for dependency management
+- `Clang`, `Ninja`, `CMake`
+
+```bash
+vcpkg install
+cmake --build --preset windows-release
+```
+
 ## License
 
 This project is licensed under the GNU General Public License v3.0
