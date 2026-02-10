@@ -15,8 +15,13 @@ Requirements:
 - `Clang`, `Ninja`, `CMake`
 
 ```bash
+# install and build dependencies
 vcpkg install
 cmake --build --preset windows-release
+
+# package for release
+cmake --install build --prefix install
+cpack --config build/CPackConfig.cmake
 ```
 
 ## License

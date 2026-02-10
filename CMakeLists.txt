@@ -36,9 +36,6 @@ target_link_libraries(textsight PRIVATE
 )
 
 # install and packaging setup
-include(GNUInstallDirs)
-include(InstallRequiredSystemLibraries)
-
 install(TARGETS textsight
     RUNTIME DESTINATION bin
 )
@@ -72,6 +69,12 @@ install(CODE [[
         message(WARNING "Unresolved runtime dependencies: ${unresolved_deps}")
     endif()
 ]])
+
+if (WIN32)
+    install(FILES "${CMAKE_SOURCE_DIR}/installer/VC_redist.x64.exe"
+        DESTINATION ${CMAKE_INSTALL_BINDIR}
+    )
+endif()
 
 # CPack
 set(CPACK_PACKAGE_NAME "textsight")
