@@ -4,4 +4,10 @@ vcpkg_installed/
 # build artifacts
 .cache/
 build/
+
+# install
 install/
+
+# packaging
+_CPack_Packages/
+*.zip
