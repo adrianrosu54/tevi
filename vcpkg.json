@@ -8,10 +8,17 @@
         "highgui",
         "dnn",
         "jpeg",
-        "png",
+        "png"
+      ]
+    },
+    {
+      "name": "opencv4",
+      "default-features": false,
+      "features": [
         "dshow",
         "msmf"
-      ]
+      ],
+      "platform": "windows"
     },
     "ftxui"
   ]

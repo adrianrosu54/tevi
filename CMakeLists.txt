@@ -40,37 +40,40 @@ install(TARGETS textsight
     RUNTIME DESTINATION bin
 )
 
-install(CODE [[
-    file(GET_RUNTIME_DEPENDENCIES
-        EXECUTABLES
-            "$<TARGET_FILE:textsight>"
-        RESOLVED_DEPENDENCIES_VAR resolved_deps
-        UNRESOLVED_DEPENDENCIES_VAR unresolved_deps
-        DIRECTORIES
-            $ENV{PATH}
-        PRE_EXCLUDE_REGEXES
-            "api-ms-win-.*"
-            "ext-ms-win-.*"
-        POST_EXCLUDE_REGEXES
-            ".*system32.*"
-            ".*windows.*"
-    )
-
-    foreach(dep IN LISTS resolved_deps)
-        file(INSTALL
-            DESTINATION "${CMAKE_INSTALL_PREFIX}/bin"
-            TYPE SHARED_LIBRARY
-            FOLLOW_SYMLINK_CHAIN
-            FILES "${dep}"
-        )
-    endforeach()
-
-    if (unresolved_deps)
-        message(WARNING "Unresolved runtime dependencies: ${unresolved_deps}")
-    endif()
-]])
+if (UNIX AND NOT APPLE)
+    set(CMAKE_INSTALL_RPATH "$ORIGIN")
+endif()
 
 if (WIN32)
+    install(CODE [[
+        file(GET_RUNTIME_DEPENDENCIES
+            EXECUTABLES
+                "$<TARGET_FILE:textsight>"
+            RESOLVED_DEPENDENCIES_VAR resolved_deps
+            UNRESOLVED_DEPENDENCIES_VAR unresolved_deps
+            DIRECTORIES
+                $ENV{PATH}
+            PRE_EXCLUDE_REGEXES
+                "api-ms-win-.*"
+                "ext-ms-win-.*"
+            POST_EXCLUDE_REGEXES
+                ".*system32.*"
+                ".*windows.*"
+        )
+
+        foreach(dep IN LISTS resolved_deps)
+            file(INSTALL
+                DESTINATION "${CMAKE_INSTALL_PREFIX}/bin"
+                TYPE SHARED_LIBRARY
+                FOLLOW_SYMLINK_CHAIN
+                FILES "${dep}"
+            )
+        endforeach()
+
+        if (unresolved_deps)
+            message(WARNING "Unresolved runtime dependencies: ${unresolved_deps}")
+        endif()
+    ]])
     install(FILES "${CMAKE_SOURCE_DIR}/installer/VC_redist.x64.exe"
         DESTINATION ${CMAKE_INSTALL_BINDIR}
     )

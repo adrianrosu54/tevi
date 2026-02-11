@@ -13,6 +13,8 @@ Requirements:
 
 - `vcpkg` for dependency management
 - `Clang`, `Ninja`, `CMake`
+- `libopencv4` on Linux
+- `vc_redist.x64` installer on Windows
 
 ```bash
 # install and build dependencies

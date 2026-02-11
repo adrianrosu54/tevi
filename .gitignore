@@ -12,3 +12,4 @@ installer/
 # packaging
 _CPack_Packages/
 *.zip
+*.tar.gz
