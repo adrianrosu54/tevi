@@ -1,4 +1,7 @@
 #include <asm-generic/ioctls.h>
+#include <opencv2/core/mat.hpp>
+#include <opencv2/core/types.hpp>
+#include <string>
 #include <sys/ioctl.h>
 #include <unistd.h>
 
@@ -7,6 +10,7 @@
 #include <thread>
 
 #include <opencv2/core.hpp>
+#include <opencv2/imgproc.hpp>
 #include <opencv2/videoio.hpp>
 
 void logCameraResolution(cv::VideoCapture cap) {
@@ -24,6 +28,24 @@ void logTerminalResolution() {
               << '\n';
 }
 
+cv::Size getProjectionSize(int imageWidth, int imageHeight, int termWidth,
+                           int termHeight) {
+    // width * 2 to account for terminal character heights
+    const float aspectRatio = static_cast<float>(imageWidth * 2) / imageHeight;
+
+    int projectionWidth = static_cast<float>(termHeight) * aspectRatio;
+    int projectionHeight;
+
+    if (projectionWidth > termWidth) {
+        projectionHeight = static_cast<float>(termWidth) / aspectRatio;
+        projectionWidth = termWidth;
+    } else {
+        projectionHeight = termHeight;
+    }
+
+    return cv::Size(projectionWidth, projectionHeight);
+}
+
 int main() {
     cv::VideoCapture cap(0);
 
@@ -32,20 +54,42 @@ int main() {
         return 1;
     }
 
+    // basic logging
     logCameraResolution(cap);
     logTerminalResolution();
 
-    // hide cursor
-    std::cout << "\033[?25l";
+    // get camera image
+    cv::Mat frame;
+    bool ret = cap.read(frame);
 
-    for (int i{}; i < 5; ++i) {
-        std::cout << i + 1 << std::flush;
-        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-        std::cout << '\r';
+    if (!ret) {
+        std::cerr << "Error: Could not read camera frame\n";
+
+        cap.release();
+        return 1;
     }
 
-    // show cursor again
-    std::cout << "\n\033[?25h";
+    struct winsize ws;
+    ioctl(STDOUT_FILENO, TIOCGWINSZ, &ws);
+
+    const int termWidth = ws.ws_col;
+    const int termHeight = ws.ws_row;
+    const int imageWidth = static_cast<int>(cap.get(cv::CAP_PROP_FRAME_WIDTH));
+    const int imageHeight =
+        static_cast<int>(cap.get(cv::CAP_PROP_FRAME_HEIGHT));
+
+    const cv::Size projectionSize =
+        getProjectionSize(imageWidth, imageHeight, termWidth, termHeight);
+
+    std::cout << "Terminal projection size \t" << projectionSize.width << "x"
+              << projectionSize.height << "\n";
+
+    // print terminal buffer placeholder
+    std::string charBuffer(projectionSize.width, 'x');
+
+    for (int i{}; i < projectionSize.height; ++i) {
+        std::cout << charBuffer << '\n';
+    }
 
     cap.release();
     return 0;
