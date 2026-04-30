@@ -1,0 +1,4 @@
+# 4 space indentation
+IndentWidth: 4
+UseTab: Never
+BasedOnStyle: LLVM

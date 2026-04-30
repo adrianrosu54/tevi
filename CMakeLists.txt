@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 4.0)
 
-project(text-sight 
+project(text-sight
     VERSION 0.1.1
     LANGUAGES CXX
     DESCRIPTION "TUI visualizer application"
@@ -22,7 +22,7 @@ add_executable(textsight
     src/ui/view.cpp
 )
 
-target_include_directories(textsight 
+target_include_directories(textsight
     PRIVATE src
 )
 
@@ -40,11 +40,11 @@ install(TARGETS textsight
     RUNTIME DESTINATION bin
 )
 
-if (UNIX AND NOT APPLE)
+if(UNIX AND NOT APPLE)
     set(CMAKE_INSTALL_RPATH "$ORIGIN")
 endif()
 
-if (WIN32)
+if(WIN32)
     install(CODE [[
         file(GET_RUNTIME_DEPENDENCIES
             EXECUTABLES
@@ -70,7 +70,7 @@ if (WIN32)
             )
         endforeach()
 
-        if (unresolved_deps)
+        if(unresolved_deps)
             message(WARNING "Unresolved runtime dependencies: ${unresolved_deps}")
         endif()
     ]])
@@ -85,10 +85,10 @@ set(CPACK_PACKAGE_VENDOR "Adrian Rosu")
 set(CPACK_PACKAGE_VERSION ${PROJECT_VERSION})
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Terminal based OpenCV webcam visualizer")
 
-if (WIN32)
+if(WIN32)
     set(CPACK_GENERATOR "ZIP")
-else ()
+else()
     set(CPACK_GENERATOR "TGZ")
-endif ()
+endif()
 
 include(CPack)

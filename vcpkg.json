@@ -1,25 +1,24 @@
 {
-  "name": "text-sight",
-  "dependencies": [
-    {
-      "name": "opencv4",
-      "default-features": false,
-      "features": [
-        "highgui",
-        "dnn",
-        "jpeg",
-        "png"
-      ]
-    },
-    {
-      "name": "opencv4",
-      "default-features": false,
-      "features": [
-        "dshow",
-        "msmf"
-      ],
-      "platform": "windows"
-    },
-    "ftxui"
-  ]
+    "name": "text-sight",
+    "dependencies": [
+        {
+            "name": "opencv4",
+            "default-features": false,
+            "features": [
+                "highgui",
+                "jpeg",
+                "png"
+            ]
+        },
+        {
+            "name": "opencv4",
+            "default-features": false,
+            "features": [
+                "dshow",
+                "msmf"
+            ],
+            "platform": "windows"
+        },
+        "ftxui"
+    ]
 }

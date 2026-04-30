@@ -1,20 +1,20 @@
 # Text Sight
 
-A Terminal User Interface (TUI) application for displaying 
+A Terminal User Interface (TUI) application for displaying
 webcam image input directly in the terminal.
 
-## Download 
+## Download
 
 See GitHub releases for prebuilt binaries.
 
-### Building from source
+## Building from source
 
 Requirements:
 
-- `vcpkg` for dependency management
-- `Clang`, `Ninja`, `CMake`
-- `libopencv4` on Linux
-- `vc_redist.x64` installer on Windows
+- **vcpkg** for dependency management
+- **Clang**, **Ninja**, **CMake**
+- **libopencv4** on Linux
+- **vc_redist.x64** installer on Windows
 
 ```bash
 # install and build dependencies
