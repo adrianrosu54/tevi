@@ -1,24 +1,20 @@
 {
-    "name": "text-sight",
+    "name": "tevi",
+    "version": "0.2.0",
     "dependencies": [
         {
-            "name": "opencv4",
+            "name": "opencv",
             "default-features": false,
-            "features": [
-                "highgui",
-                "jpeg",
-                "png"
-            ]
+            "features": []
         },
         {
-            "name": "opencv4",
+            "name": "opencv",
             "default-features": false,
             "features": [
                 "dshow",
                 "msmf"
             ],
             "platform": "windows"
-        },
-        "ftxui"
+        }
     ]
 }
