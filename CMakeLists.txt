@@ -10,7 +10,11 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(OpenCV REQUIRED COMPONENTS videoio imgproc)
 
-add_executable(tevi src/main.cpp)
+add_executable(tevi
+    src/main.cpp
+    src/data.cpp
+    src/render.cpp
+)
 
 target_include_directories(tevi
     PRIVATE src
