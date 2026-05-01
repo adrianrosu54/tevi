@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 4.0)
 
 project(tevi
-    VERSION 0.2.0
+    VERSION 1.0.0
     LANGUAGES CXX
 )
 
@@ -27,10 +27,13 @@ target_include_directories(tevi
 target_link_libraries(tevi PRIVATE
     opencv_core
     opencv_imgproc
-    opencv_highgui
+    opencv_videoio
 )
 
 # version string
 target_compile_definitions(tevi PRIVATE
     TEVI_VERSION="${PROJECT_VERSION}"
 )
+
+# static linking
+target_link_options(tevi PRIVATE -static-libgcc -static-libstdc++)
