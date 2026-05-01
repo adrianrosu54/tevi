@@ -10,6 +10,7 @@
 int runPrint(const Config &config) {
     AppData data;
 
+    // source extraction
     int success = singleFrameCapture(data);
     if (success != 0)
         return 1;
@@ -17,7 +18,23 @@ int runPrint(const Config &config) {
     // obtain size information
     updateTerminalSize(data);
     data.termHeight -= 1; // account for prompt line in CLI
-    computeImageSize(data);
+
+    if (config.height == 0 && config.width == 0)
+        computeImageSize(data);
+    else if (config.height != 0 && config.width != 0) {
+        data.projWidth = config.width;
+        data.projHeight = config.height;
+    } else if (config.height != 0) {
+        const float aspectRatio =
+            static_cast<float>(data.sourceWidth * 2) / data.sourceHeight;
+        data.projHeight = config.height;
+        data.projWidth = config.height * aspectRatio;
+    } else {
+        const float aspectRatio =
+            static_cast<float>(data.sourceWidth * 2) / data.sourceHeight;
+        data.projWidth = config.width;
+        data.projHeight = static_cast<float>(config.width) / aspectRatio;
+    }
 
 #ifndef NDEBUG
     std::cerr << "---DIMENSIONS---\n";
