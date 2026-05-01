@@ -1,6 +1,13 @@
+#include <opencv2/core/types.hpp>
+#include <opencv2/imgcodecs.hpp>
+#include <stdexcept>
+
 #ifndef NDEBUG
 #include <iostream>
 #endif // !NDEBUG
+
+#include <opencv2/imgproc.hpp>
+#include <opencv2/imgproc/types_c.h>
 
 #include "print.hpp"
 #include "util/camera.hpp"
@@ -11,9 +18,30 @@ int runPrint(const Config &config) {
     AppData data;
 
     // source extraction
-    int success = singleFrameCapture(data);
-    if (success != 0)
-        return 1;
+    switch (config.sourceType) {
+    case Source::CAMERA:
+        if (0 != singleFrameCapture(data))
+            return 1;
+        if (config.grey)
+            cv::cvtColor(data.sourceFrame, data.sourceFrame,
+                         cv::COLOR_BGR2GRAY);
+        break;
+    case Source::PHOTO:
+        if (config.grey)
+            data.sourceFrame =
+                cv::imread(config.sourcePath, cv::IMREAD_GRAYSCALE);
+        else
+            data.sourceFrame =
+                cv::imread(config.sourcePath, cv::IMREAD_COLOR_BGR);
+        {
+            cv::Size sourceSize = data.sourceFrame.size();
+            data.sourceWidth = sourceSize.width;
+            data.sourceHeight = sourceSize.height;
+        }
+        break;
+    case Source::VIDEO:
+        throw std::invalid_argument("Video file printing not supported");
+    }
 
     // obtain size information
     updateTerminalSize(data);
@@ -47,8 +75,8 @@ int runPrint(const Config &config) {
     std::cerr << "----------------\n";
 #endif // !NDEBUG
 
-    // print terminal to screen
-    printColor(data);
+    // render to screen
+    renderBlocks(data, !config.grey);
 
     return 0;
 }

@@ -18,8 +18,8 @@ int main(int argc, char *argv[]) {
 
             runPrint(config);
         } catch (std::invalid_argument e) {
-            std::cerr << "Error: " << e.what() << "\n";
             printHelp();
+            std::cerr << "Error: " << e.what() << "\n";
             return -1;
         }
     } else if (command == "live") {
@@ -29,8 +29,8 @@ int main(int argc, char *argv[]) {
     } else if (command == "--help") {
         printHelp();
     } else {
-        std::cerr << "Error: Unknown command\n";
         printHelp();
+        std::cerr << "Error: Unknown command\n";
         return 1;
     }
 

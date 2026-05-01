@@ -1,9 +1,18 @@
 #pragma once
 
-#include <string>
+#include <filesystem>
+
+namespace fs = std::filesystem;
+
+enum class Source {
+    CAMERA,
+    PHOTO,
+    VIDEO,
+};
 
 struct Config {
-    std::string fileName{""};
+    fs::path sourcePath{};
+    Source sourceType{Source::CAMERA};
     int height{0};
     int width{0};
     bool grey{false};

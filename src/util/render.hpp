@@ -2,4 +2,4 @@
 
 #include "util/data.hpp"
 
-void printColor(const AppData &data);
+void renderBlocks(const AppData &data, bool color);
