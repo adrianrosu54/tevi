@@ -14,9 +14,10 @@ add_executable(tevi
     src/main.cpp
     src/args.cpp
     src/print.cpp
+    src/render.cpp
     src/util/data.cpp
-    src/util/render.cpp
     src/util/camera.cpp
+    src/render/pixel.cpp
 )
 
 target_include_directories(tevi

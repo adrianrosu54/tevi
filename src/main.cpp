@@ -22,7 +22,7 @@ int main(int argc, char *argv[]) {
             std::cerr << "Error: " << e.what() << "\n";
             return -1;
         }
-    } else if (command == "live") {
+        // } else if (command == "live") {
 
     } else if (command == "--version") {
         std::cout << "version: " TEVI_VERSION "\n";

@@ -55,7 +55,7 @@ Config parseArgs(int argc, char **argv) {
             }
         } else if (arg == "--ascii") {
             config.ascii = true;
-        } else if (arg == "--grey") {
+        } else if (arg == "--grey" || arg == "--gray") {
             config.grey = true;
         } else {
             throw std::invalid_argument("Unknown argument \"" + arg + "\"");

@@ -15,6 +15,8 @@ struct AppData {
     // image to project dimensions
     int projWidth{};
     int projHeight{};
+    // account for double height color blocks
+    int processingHeight{};
 };
 
 void updateCameraSize(AppData &data, const cv::VideoCapture &cap);

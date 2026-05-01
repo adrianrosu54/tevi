@@ -1,3 +1,5 @@
+#include "render.hpp"
+#include "render/pixel.hpp"
 #include <opencv2/core/types.hpp>
 #include <opencv2/imgcodecs.hpp>
 #include <stdexcept>
@@ -10,9 +12,9 @@
 #include <opencv2/imgproc/types_c.h>
 
 #include "print.hpp"
+#include "render.hpp"
 #include "util/camera.hpp"
 #include "util/data.hpp"
-#include "util/render.hpp"
 
 int runPrint(const Config &config) {
     AppData data;
@@ -22,17 +24,9 @@ int runPrint(const Config &config) {
     case Source::CAMERA:
         if (0 != singleFrameCapture(data))
             return 1;
-        if (config.grey)
-            cv::cvtColor(data.sourceFrame, data.sourceFrame,
-                         cv::COLOR_BGR2GRAY);
         break;
     case Source::PHOTO:
-        if (config.grey)
-            data.sourceFrame =
-                cv::imread(config.sourcePath, cv::IMREAD_GRAYSCALE);
-        else
-            data.sourceFrame =
-                cv::imread(config.sourcePath, cv::IMREAD_COLOR_BGR);
+        data.sourceFrame = cv::imread(config.sourcePath, cv::IMREAD_COLOR_BGR);
         {
             cv::Size sourceSize = data.sourceFrame.size();
             data.sourceWidth = sourceSize.width;
@@ -75,8 +69,18 @@ int runPrint(const Config &config) {
     std::cerr << "----------------\n";
 #endif // !NDEBUG
 
+    PixelPainter painter;
+    if (config.ascii) {
+        painter = (config.grey) ? paintAscii : paintColorAscii;
+        data.processingHeight = data.projHeight;
+    } else {
+        painter = (config.grey) ? paintGreyBlock : paintColorBlock;
+        // account for double height on block drawings
+        data.processingHeight = 2 * data.projHeight;
+    }
+
     // render to screen
-    renderBlocks(data, !config.grey);
+    renderImage(data, painter);
 
     return 0;
 }
