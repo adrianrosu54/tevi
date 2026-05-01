@@ -28,3 +28,8 @@ target_link_libraries(tevi PRIVATE
     opencv_imgproc
     opencv_highgui
 )
+
+# version string
+target_compile_definitions(tevi PRIVATE
+    TEVI_VERSION="${PROJECT_VERSION}"
+)

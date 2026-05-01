@@ -1,9 +1,9 @@
 #include "args.hpp"
+#include <iostream>
 #include <stdexcept>
 
 #ifndef NDEBUG
 #include <ios>
-#include <iostream>
 #endif // NDEBUG
 
 Config parseArgs(int argc, char **argv) {
@@ -36,17 +36,41 @@ Config parseArgs(int argc, char **argv) {
             }
         } else if (arg == "--ascii") {
             config.ascii = true;
+        } else if (arg == "--grey") {
+            config.grey = true;
+        } else {
+            throw std::invalid_argument("Unknown argument \"" + arg + "\"");
         }
     }
 
 #ifndef NDEBUG
     std::cerr << "---ArgsConfig---\n";
-    std::cerr << "fileName \t= " << config.fileName << '\n';
-    std::cerr << "height \t= " << config.height << '\n';
-    std::cerr << "width \t= " << config.width << '\n';
-    std::cerr << "ascii \t= " << std::boolalpha << config.ascii << '\n';
+    std::cerr << "fileName \t= " << config.fileName << "\n";
+    std::cerr << "height \t= " << config.height << "\n";
+    std::cerr << "width \t= " << config.width << "\n";
+    std::cerr << "grey \t= " << std::boolalpha << config.grey << "\n";
+    std::cerr << "ascii \t= " << std::boolalpha << config.ascii << "\n";
     std::cerr << "----------------\n";
 #endif // NDEBUG
 
     return config;
+}
+
+void printHelp() {
+    std::cout << R"(
+Usage: tevi [command] [options]
+
+Commands:
+    print                   Print image to terminal
+
+Options:
+    -w, --width <cols>      Output width in characters
+    -h, --height <rows>     Output height in characters
+        --ascii             Print as ascii text
+        --grey              Display as greyscale
+
+        --help              Show this message and exit
+        --version           Display project version
+
+)";
 }
