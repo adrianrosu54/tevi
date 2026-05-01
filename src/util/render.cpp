@@ -8,31 +8,12 @@
 #include "util/data.hpp"
 #include "util/render.hpp"
 
-void computeImageSize(AppData &data) {
-    // width * 2 to account for terminal character heights
-    const float aspectRatio =
-        static_cast<float>(data.cameraWidth * 2) / data.cameraHeight;
-
-    int projectionWidth = static_cast<float>(data.termHeight) * aspectRatio;
-    int projectionHeight;
-
-    if (projectionWidth > data.termWidth) {
-        projectionHeight = static_cast<float>(data.termWidth) / aspectRatio;
-        projectionWidth = data.termWidth;
-    } else {
-        projectionHeight = data.termHeight;
-    }
-
-    data.projWidth = projectionWidth;
-    data.projHeight = projectionHeight;
-}
-
 void printColor(const AppData &data) {
     cv::Mat resized;
     // double the height for double unicode block rendering
     cv::Size size(data.projWidth, 2 * data.projHeight);
 
-    cv::resize(data.frame, resized, size, 0, 0, cv::INTER_LINEAR);
+    cv::resize(data.sourceFrame, resized, size, 0, 0, cv::INTER_LINEAR);
 
     // estimate 30 bytes per pixel ANSI sequence
     std::string buffer;

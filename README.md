@@ -1,7 +1,8 @@
 # TeVi
 
-TeVi is a Terminal User Interface (TUI) application for displaying webcam image
-input directly in the terminal.
+TeVi is a CLI application for displaying webcam image input directly in the
+terminal. It enables the user to print images to the screen using **ANSI escape
+sequences**.
 
 ## Building from source
 

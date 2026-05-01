@@ -12,7 +12,7 @@ int singleFrameCapture(AppData &data) {
     }
 
     // read from camera
-    bool ret = cap.read(data.frame);
+    bool ret = cap.read(data.sourceFrame);
 
     if (!ret) {
         std::cerr << "Error: Could not read camera frame\n";

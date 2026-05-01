@@ -5,10 +5,10 @@
 #include <opencv2/videoio.hpp>
 
 struct AppData {
-    cv::Mat frame{};
-    // camera dimensions
-    int cameraWidth{};
-    int cameraHeight{};
+    cv::Mat sourceFrame{};
+    // source dimensions
+    int sourceWidth{};
+    int sourceHeight{};
     // terminal window dimensions
     int termWidth{};
     int termHeight{};
@@ -20,3 +20,5 @@ struct AppData {
 void updateCameraSize(AppData &data, const cv::VideoCapture &cap);
 
 void updateTerminalSize(AppData &data);
+
+void computeImageSize(AppData &data);
