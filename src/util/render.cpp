@@ -1,12 +1,12 @@
 #include <iostream>
-#include <opencv2/core/matx.hpp>
 #include <string>
 
+#include <opencv2/core/matx.hpp>
 #include <opencv2/core/types.hpp>
 #include <opencv2/imgproc.hpp>
 
-#include "data.hpp"
-#include "render.hpp"
+#include "util/data.hpp"
+#include "util/render.hpp"
 
 void computeImageSize(AppData &data) {
     // width * 2 to account for terminal character heights

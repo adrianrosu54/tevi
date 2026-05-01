@@ -1,6 +1,6 @@
 #pragma once
 
-#include "data.hpp"
+#include "util/data.hpp"
 
 void computeImageSize(AppData &data);
 

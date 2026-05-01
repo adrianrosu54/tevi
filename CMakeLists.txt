@@ -12,8 +12,10 @@ find_package(OpenCV REQUIRED COMPONENTS videoio imgproc)
 
 add_executable(tevi
     src/main.cpp
-    src/data.cpp
-    src/render.cpp
+    src/print.cpp
+    src/util/data.cpp
+    src/util/render.cpp
+    src/util/camera.cpp
 )
 
 target_include_directories(tevi
