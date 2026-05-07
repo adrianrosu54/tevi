@@ -71,8 +71,9 @@ void runLive(const Config &config) {
     // get source
     SourceFetcher fetch = setSourceFetcher(config, data);
 
-    std::cout << "\033[2J"    // clear screen
-              << "\033[?25l"; // hide cursor
+    std::cout << "\033[?1049h" // alternate buffer
+                 "\033[?25l"   // hide cursor
+                 "\033[2J";    // clear screen
 
     bool running = true;
     int i = 0;
@@ -90,8 +91,11 @@ void runLive(const Config &config) {
         std::cout << "\033[H";
         renderImage(data, painter);
 
-        std::this_thread::sleep_for(std::chrono::milliseconds(50));
+        std::this_thread::sleep_for(std::chrono::milliseconds(33));
     }
 
-    std::cout << "\033[?25h"; // show cursor
+    std::cout << "\033[H"       // go home
+                 "\033[2J"      // clear
+                 "\033[?25h"    // show cursor
+                 "\033[?1049l"; // alternate buffer
 }
