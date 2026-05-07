@@ -1,36 +1,43 @@
-#include "render/pixel.hpp"
-#include <opencv2/core/types.hpp>
-#include <opencv2/imgcodecs.hpp>
 #include <stdexcept>
 
 #ifndef NDEBUG
 #include <iostream>
 #endif // !NDEBUG
 
+#include <opencv2/core/types.hpp>
+#include <opencv2/imgcodecs.hpp>
 #include <opencv2/imgproc.hpp>
 #include <opencv2/imgproc/types_c.h>
 
-#include "print.hpp"
 #include "render.hpp"
-#include "util/camera.hpp"
+#include "render/pixel.hpp"
 #include "util/data.hpp"
+
+#include "print.hpp"
 
 void runPrint(const Config &config) {
     AppData data;
 
     // source extraction
     switch (config.sourceType) {
-    case Source::CAMERA:
-        singleFrameCapture(data);
-        break;
-    case Source::PHOTO:
+    case Source::CAMERA: {
+        cv::VideoCapture cap(0);
+
+        updateCameraSize(data, cap);
+        if (!cap.isOpened())
+            throw std::runtime_error("Could not open camera");
+        // read from camera
+        bool ret = cap.read(data.sourceFrame);
+        if (!ret)
+            throw std::runtime_error("Could not read from camera frame");
+        cap.release();
+    } break;
+    case Source::PHOTO: {
         data.sourceFrame = cv::imread(config.sourcePath, cv::IMREAD_COLOR_BGR);
-        {
-            cv::Size sourceSize = data.sourceFrame.size();
-            data.sourceWidth = sourceSize.width;
-            data.sourceHeight = sourceSize.height;
-        }
-        break;
+        cv::Size sourceSize = data.sourceFrame.size();
+        data.sourceWidth = sourceSize.width;
+        data.sourceHeight = sourceSize.height;
+    } break;
     case Source::VIDEO:
         throw std::invalid_argument("Video file printing not supported");
     }

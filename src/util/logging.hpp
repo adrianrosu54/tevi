@@ -4,4 +4,4 @@
 
 void printHelp();
 
-int logAndHandleErrors(std::function<void()> func);
+int logAndHandleErrors(std::function<void()> function);

@@ -15,9 +15,8 @@ add_executable(tevi
     src/args.cpp
     src/render.cpp
     src/print.cpp
-    src/live.cpp
     src/util/data.cpp
-    src/util/camera.cpp
+    src/util/fetcher.cpp
     src/util/logging.cpp
     src/render/pixel.cpp
 )
