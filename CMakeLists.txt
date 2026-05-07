@@ -13,10 +13,12 @@ find_package(OpenCV REQUIRED COMPONENTS videoio imgproc)
 add_executable(tevi
     src/main.cpp
     src/args.cpp
-    src/print.cpp
     src/render.cpp
+    src/print.cpp
+    src/live.cpp
     src/util/data.cpp
     src/util/camera.cpp
+    src/util/logging.cpp
     src/render/pixel.cpp
 )
 
@@ -36,4 +38,6 @@ target_compile_definitions(tevi PRIVATE
 )
 
 # static linking
-target_link_options(tevi PRIVATE -static-libgcc -static-libstdc++)
+if(UNIX AND NOT APPLE)
+    target_link_options(tevi PRIVATE -static-libgcc -static-libstdc++)
+endif()

@@ -28,6 +28,8 @@ Config parseArgs(int argc, char **argv) {
 
             if (ext == ".png" || ext == ".jpg" || ext == ".jpeg")
                 config.sourceType = Source::PHOTO;
+            else if (ext == ".mp4" || ext == ".mov")
+                config.sourceType = Source::VIDEO;
             else
                 throw std::invalid_argument("Invalid file extension \"" + ext +
                                             "\"");
@@ -73,23 +75,4 @@ Config parseArgs(int argc, char **argv) {
 #endif // NDEBUG
 
     return config;
-}
-
-void printHelp() {
-    std::cout << R"(
-Usage: tevi [command] [options]
-
-Commands:
-    print                   Print image to terminal
-
-Options:
-    -w, --width <cols>      Output width in characters
-    -h, --height <rows>     Output height in characters
-        --ascii             Print as ascii text
-        --grey              Display as greyscale
-
-        --help              Show this message and exit
-        --version           Display project version
-
-)";
 }

@@ -1,4 +1,3 @@
-#include "render.hpp"
 #include "render/pixel.hpp"
 #include <opencv2/core/types.hpp>
 #include <opencv2/imgcodecs.hpp>
@@ -16,14 +15,13 @@
 #include "util/camera.hpp"
 #include "util/data.hpp"
 
-int runPrint(const Config &config) {
+void runPrint(const Config &config) {
     AppData data;
 
     // source extraction
     switch (config.sourceType) {
     case Source::CAMERA:
-        if (0 != singleFrameCapture(data))
-            return 1;
+        singleFrameCapture(data);
         break;
     case Source::PHOTO:
         data.sourceFrame = cv::imread(config.sourcePath, cv::IMREAD_COLOR_BGR);
@@ -81,6 +79,4 @@ int runPrint(const Config &config) {
 
     // render to screen
     renderImage(data, painter);
-
-    return 0;
 }

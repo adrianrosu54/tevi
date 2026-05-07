@@ -2,4 +2,4 @@
 
 #include "args.hpp"
 
-int runPrint(const Config &config = Config());
+void runPrint(const Config &config = Config());
