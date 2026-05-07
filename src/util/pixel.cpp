@@ -1,4 +1,4 @@
-#include "render/pixel.hpp"
+#include "util/pixel.hpp"
 #include <string>
 
 const char *charGradient = " .:-!+|=*xzk#M%@$";

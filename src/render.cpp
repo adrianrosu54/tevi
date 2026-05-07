@@ -6,10 +6,11 @@
 #include <opencv2/imgproc.hpp>
 
 #include "render.hpp"
-#include "render/pixel.hpp"
 #include "util/data.hpp"
+#include "util/pixel.hpp"
 
-void renderImage(const AppData &data, PixelPainter painter) {
+void renderImage(const AppData &data, PixelPainter painter,
+                 const char *lineStart) {
     cv::Mat resized;
 
     cv::Size size(data.projWidth, data.processingHeight);
@@ -22,10 +23,12 @@ void renderImage(const AppData &data, PixelPainter painter) {
 
     // render loop
     for (int row{}; row < data.projHeight; ++row) {
+        buffer += lineStart;
         for (int col{}; col < data.projWidth; ++col) {
             painter(buffer, resized, row, col);
         }
-        buffer += "\033[0m\n";
+        buffer += "\033[0m"
+                  "\n";
     }
 
     std::cout << buffer << std::flush;

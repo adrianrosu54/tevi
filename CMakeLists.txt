@@ -18,7 +18,7 @@ add_executable(tevi
     src/util/data.cpp
     src/util/fetcher.cpp
     src/util/logging.cpp
-    src/render/pixel.cpp
+    src/util/pixel.cpp
 )
 
 target_include_directories(tevi

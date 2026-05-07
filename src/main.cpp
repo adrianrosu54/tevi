@@ -20,7 +20,7 @@ int main(int argc, char *argv[]) {
     } else if (command == "live") {
         return logAndHandleErrors([&]() {
             Config config(parseArgs(argc, argv));
-            // runLive(config);
+            runLive(config);
         });
     } else if (command == "--version") {
         std::cout << "version: " TEVI_VERSION "\n";

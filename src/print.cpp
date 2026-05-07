@@ -1,5 +1,5 @@
-#include <stdexcept>
-
+#include <chrono>
+#include <thread>
 #ifndef NDEBUG
 #include <iostream>
 #endif // !NDEBUG
@@ -9,59 +9,37 @@
 #include <opencv2/imgproc.hpp>
 #include <opencv2/imgproc/types_c.h>
 
+#include "args.hpp"
 #include "render.hpp"
-#include "render/pixel.hpp"
 #include "util/data.hpp"
+#include "util/fetcher.hpp"
+#include "util/pixel.hpp"
 
 #include "print.hpp"
 
 void runPrint(const Config &config) {
     AppData data;
 
-    // source extraction
-    switch (config.sourceType) {
-    case Source::CAMERA: {
-        cv::VideoCapture cap(0);
+    // obtain painter settings
+    PixelPainter painter;
+    if (config.ascii)
+        painter = (config.grey) ? paintAscii : paintColorAscii;
+    else
+        painter = (config.grey) ? paintGreyBlock : paintColorBlock;
 
-        updateCameraSize(data, cap);
-        if (!cap.isOpened())
-            throw std::runtime_error("Could not open camera");
-        // read from camera
-        bool ret = cap.read(data.sourceFrame);
-        if (!ret)
-            throw std::runtime_error("Could not read from camera frame");
-        cap.release();
-    } break;
-    case Source::PHOTO: {
-        data.sourceFrame = cv::imread(config.sourcePath, cv::IMREAD_COLOR_BGR);
-        cv::Size sourceSize = data.sourceFrame.size();
-        data.sourceWidth = sourceSize.width;
-        data.sourceHeight = sourceSize.height;
-    } break;
-    case Source::VIDEO:
-        throw std::invalid_argument("Video file printing not supported");
-    }
+    // extract image from source
+    SourceFetcher fetch = setSourceFetcher(config, data);
+    data.sourceFrame = fetch();
 
     // obtain size information
     updateTerminalSize(data);
     data.termHeight -= 1; // account for prompt line in CLI
 
-    if (config.height == 0 && config.width == 0)
-        computeImageSize(data);
-    else if (config.height != 0 && config.width != 0) {
-        data.projWidth = config.width;
-        data.projHeight = config.height;
-    } else if (config.height != 0) {
-        const float aspectRatio =
-            static_cast<float>(data.sourceWidth * 2) / data.sourceHeight;
-        data.projHeight = config.height;
-        data.projWidth = config.height * aspectRatio;
-    } else {
-        const float aspectRatio =
-            static_cast<float>(data.sourceWidth * 2) / data.sourceHeight;
-        data.projWidth = config.width;
-        data.projHeight = static_cast<float>(config.width) / aspectRatio;
-    }
+    updateProjectionSize(config, data);
+
+    // account for double height on block drawings
+    data.processingHeight =
+        (config.ascii) ? data.projHeight : 2 * data.projHeight;
 
 #ifndef NDEBUG
     std::cerr << "---DIMENSIONS---\n";
@@ -74,16 +52,46 @@ void runPrint(const Config &config) {
     std::cerr << "----------------\n";
 #endif // !NDEBUG
 
-    PixelPainter painter;
-    if (config.ascii) {
-        painter = (config.grey) ? paintAscii : paintColorAscii;
-        data.processingHeight = data.projHeight;
-    } else {
-        painter = (config.grey) ? paintGreyBlock : paintColorBlock;
-        // account for double height on block drawings
-        data.processingHeight = 2 * data.projHeight;
-    }
-
     // render to screen
     renderImage(data, painter);
+}
+
+void runLive(const Config &config) {
+    AppData data;
+
+    PixelPainter painter;
+    if (config.ascii)
+        painter = (config.grey) ? paintAscii : paintColorAscii;
+    else
+        painter = (config.grey) ? paintGreyBlock : paintColorBlock;
+
+    data.processingHeight =
+        (config.ascii) ? data.projHeight : 2 * data.projHeight;
+
+    // get source
+    SourceFetcher fetch = setSourceFetcher(config, data);
+
+    std::cout << "\033[2J"    // clear screen
+              << "\033[?25l"; // hide cursor
+
+    bool running = true;
+    int i = 0;
+    while (i++ < 50) {
+        data.sourceFrame = fetch();
+
+        updateTerminalSize(data);
+        data.termHeight -= 1; // account for prompt line in CLI
+
+        updateProjectionSize(config, data);
+
+        data.processingHeight =
+            (config.ascii) ? data.projHeight : 2 * data.projHeight;
+
+        std::cout << "\033[H";
+        renderImage(data, painter);
+
+        std::this_thread::sleep_for(std::chrono::milliseconds(50));
+    }
+
+    std::cout << "\033[?25h"; // show cursor
 }

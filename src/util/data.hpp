@@ -1,5 +1,6 @@
 #pragma once
 
+#include "args.hpp"
 #include <opencv2/core/mat.hpp>
 #include <opencv2/core/types.hpp>
 #include <opencv2/videoio.hpp>
@@ -24,3 +25,5 @@ void updateCameraSize(AppData &data, const cv::VideoCapture &cap);
 void updateTerminalSize(AppData &data);
 
 void computeImageSize(AppData &data);
+
+void updateProjectionSize(const Config &config, AppData &data);

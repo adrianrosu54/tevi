@@ -34,3 +34,22 @@ void computeImageSize(AppData &data) {
     data.projWidth = projectionWidth;
     data.projHeight = projectionHeight;
 }
+
+void updateProjectionSize(const Config &config, AppData &data) {
+    if (config.height == 0 && config.width == 0)
+        computeImageSize(data);
+    else if (config.height != 0 && config.width != 0) {
+        data.projWidth = config.width;
+        data.projHeight = config.height;
+    } else if (config.height != 0) {
+        const float aspectRatio =
+            static_cast<float>(data.sourceWidth * 2) / data.sourceHeight;
+        data.projHeight = config.height;
+        data.projWidth = config.height * aspectRatio;
+    } else {
+        const float aspectRatio =
+            static_cast<float>(data.sourceWidth * 2) / data.sourceHeight;
+        data.projWidth = config.width;
+        data.projHeight = static_cast<float>(config.width) / aspectRatio;
+    }
+}

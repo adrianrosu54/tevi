@@ -21,23 +21,20 @@ SourceFetcher setSourceFetcher(const Config &config, AppData &data) {
         updateCameraSize(data, cap);
 
         cv::Mat frame;
-        fetch = [cap = std::move(cap), frame = std::move(frame),
-                 &data]() mutable {
+        fetch = [cap = std::move(cap), frame = std::move(frame)]() mutable {
             bool ret = cap.read(frame);
             if (!ret)
                 throw std::runtime_error("Could not read from camera");
-            data.sourceFrame = frame;
+            return frame;
         };
     } break;
     case Source::PHOTO: {
         cv::Mat frame = cv::imread(config.sourcePath, cv::IMREAD_COLOR_BGR);
-        cv::Size sourceSize = data.sourceFrame.size();
-        data.sourceWidth = sourceSize.width;
-        data.sourceHeight = sourceSize.height;
+        cv::Size frameSize = frame.size();
+        data.sourceWidth = frameSize.width;
+        data.sourceHeight = frameSize.height;
 
-        fetch = [frame = std::move(frame), &data]() mutable {
-            data.sourceFrame = frame;
-        };
+        fetch = [frame = std::move(frame)]() { return frame; };
     } break;
     case Source::VIDEO:
         throw std::invalid_argument("Video sources not supported");

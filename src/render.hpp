@@ -1,6 +1,7 @@
 #pragma once
 
-#include "render/pixel.hpp"
 #include "util/data.hpp"
+#include "util/pixel.hpp"
 
-void renderImage(const AppData &data, PixelPainter painter);
+void renderImage(const AppData &data, PixelPainter painter,
+                 const char *lineStart = "");
