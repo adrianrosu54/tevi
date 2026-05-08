@@ -11,7 +11,7 @@ Commands:
     stream                  Stream Output in TUI mode
 
 Options:
-    -f, --file              Render from an image file. Supports .png and .jpeg
+    -f, --file <file>       Render from an image file. Supports .png and .jpeg
     -w, --width <cols>      Output width in characters
     -h, --height <rows>     Output height in characters
         --ascii             Print as ascii text

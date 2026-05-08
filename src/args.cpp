@@ -1,10 +1,10 @@
 #include <filesystem>
-#include <iostream>
 #include <stdexcept>
 #include <string>
 
 #ifndef NDEBUG
 #include <ios>
+#include <iostream>
 #endif // NDEBUG
 
 #include "args.hpp"
