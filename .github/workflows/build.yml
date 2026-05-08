@@ -15,18 +15,15 @@ jobs:
         include:
           - os: ubuntu-22.04
             preset: release-linux
-            binary: tevi
-            artifact: tevi-linux
+            asset_name: tevi-linux-x86_64
 
           - os: windows-latest
             preset: release-windows
-            binary: tevi.exe
-            artifact: tevi-windows
+            asset_name: tevi-windows-x86_64
 
           - os: macos-14
             preset: release-macos
-            binary: tevi
-            artifact: tevi-macos
+            asset_name: tevi-macos-arm64
     runs-on: ${{ matrix.os }}
 
     steps:
@@ -84,13 +81,25 @@ jobs:
       # strip debug symbols on Linux and Mac
       - name: Strip binary
         if: runner.os != 'Windows'
-        run: strip build/${{ matrix.binary }}
+        run: strip build/tevi
+
+      - name: Package Unix binary
+        if: runner.os != 'Windows'
+        run: |
+          tar -czf ${{ matrix.asset_name }}.tar.gz -C build tevi
+
+      - name: Package Windows binary
+        if: runner.os == 'Windows'
+        run: |
+          powershell Compress-Archive build/tevi.exe ${{ matrix.asset_name }}.zip
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ matrix.artifact }}
-          path: build/${{ matrix.binary }}
+          name: ${{ matrix.asset_name }}
+          path: |
+            *.tar.gz
+            *.zip
 
   release:
     if: startsWith(github.ref, 'refs/tags/v')
@@ -106,9 +115,9 @@ jobs:
       - name: Create GitHub release
         uses: softprops/action-gh-release@v2
         with:
-          generate_release_props: true
+          generate_release_notes: true
           files: |
-            tevi-linux/tevi
-            tevi-windows/tevi.exe
-            tevi-macos/tevi
+            tevi-linux-x86_64/tevi-linux-x86_64.tar.gz
+            tevi-windows-x86_64/tevi-windows-x86_64.zip
+            tevi-macos-arm64/tevi-macos-arm64.tar.gz
 
