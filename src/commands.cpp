@@ -1,8 +1,8 @@
 #include <chrono>
-#include <thread>
-#ifndef NDEBUG
+#include <csignal>
+#include <cstdlib>
 #include <iostream>
-#endif // !NDEBUG
+#include <thread>
 
 #include <opencv2/core/types.hpp>
 #include <opencv2/imgcodecs.hpp>
@@ -15,7 +15,20 @@
 #include "util/fetcher.hpp"
 #include "util/pixel.hpp"
 
-#include "print.hpp"
+#include "commands.hpp"
+
+void restoreTerminal() {
+    std::cout << "\033[?7h"    // re-enable line wrap
+                 "\033[?25h"   // show cursor
+                 "\033[0m"     // reset colors
+                 "\033[?1049l" // alternate buffer
+              << std::flush;
+}
+
+void handleSignal(int) {
+    restoreTerminal();
+    std::exit(0);
+}
 
 void runPrint(const Config &config) {
     AppData data;
@@ -50,13 +63,13 @@ void runPrint(const Config &config) {
     std::cerr << "Projection size: \t" << data.projWidth << "x"
               << data.projHeight << "\n";
     std::cerr << "----------------\n";
-#endif // !NDEBUG
+#endif // NDEBUG
 
     // render to screen
     renderImage(data, painter);
 }
 
-void runLive(const Config &config) {
+void runStream(const Config &config) {
     AppData data;
 
     PixelPainter painter;
@@ -71,13 +84,18 @@ void runLive(const Config &config) {
     // get source
     SourceFetcher fetch = setSourceFetcher(config, data);
 
+    // setup terminal
     std::cout << "\033[?1049h" // alternate buffer
                  "\033[?25l"   // hide cursor
-                 "\033[2J";    // clear screen
+                 "\033[?7l"    // disable line wrap
+                 "\033[2J"     // clear screen
+              << std::flush;
+
+    std::atexit(restoreTerminal);
+    std::signal(SIGINT, handleSignal);
 
     bool running = true;
-    int i = 0;
-    while (i++ < 50) {
+    while (running) {
         data.sourceFrame = fetch();
 
         updateTerminalSize(data);
@@ -93,9 +111,4 @@ void runLive(const Config &config) {
 
         std::this_thread::sleep_for(std::chrono::milliseconds(33));
     }
-
-    std::cout << "\033[H"       // go home
-                 "\033[2J"      // clear
-                 "\033[?25h"    // show cursor
-                 "\033[?1049l"; // alternate buffer
 }

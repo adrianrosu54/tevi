@@ -8,8 +8,10 @@ Usage: tevi [command] [options]
 
 Commands:
     print                   Print image to terminal
+    stream                  Stream Output in TUI mode
 
 Options:
+    -f, --file              Render from an image file. Supports .png and .jpeg
     -w, --width <cols>      Output width in characters
     -h, --height <rows>     Output height in characters
         --ascii             Print as ascii text

@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 4.0)
 
 project(tevi
-    VERSION 1.0.0
+    VERSION 1.1.0
     LANGUAGES CXX
 )
 
@@ -11,10 +11,10 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package(OpenCV REQUIRED COMPONENTS videoio imgproc)
 
 add_executable(tevi
-    src/main.cpp
     src/args.cpp
+    src/commands.cpp
+    src/main.cpp
     src/render.cpp
-    src/print.cpp
     src/util/data.cpp
     src/util/fetcher.cpp
     src/util/logging.cpp

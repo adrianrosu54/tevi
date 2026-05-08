@@ -1,6 +1,7 @@
 #include <filesystem>
 #include <iostream>
 #include <stdexcept>
+#include <string>
 
 #ifndef NDEBUG
 #include <ios>
@@ -16,7 +17,7 @@ Config parseArgs(int argc, char **argv) {
     for (int i{2}; i < argc; ++i) {
         std::string arg{argv[i]};
 
-        if (arg == "--file" && i + 1 < argc) {
+        if ((arg == "-f" || arg == "--file") && i + 1 < argc) {
             std::string fileName = std::string(argv[++i]);
             // validate existence
             if (!fs::exists(fileName))
@@ -24,7 +25,7 @@ Config parseArgs(int argc, char **argv) {
                                             "\" doesn't exist");
             // validate extension
             fs::path file(fileName);
-            std::string ext = file.extension();
+            std::string ext = file.extension().string();
 
             if (ext == ".png" || ext == ".jpg" || ext == ".jpeg")
                 config.sourceType = Source::PHOTO;
@@ -34,7 +35,7 @@ Config parseArgs(int argc, char **argv) {
                 throw std::invalid_argument("Invalid file extension \"" + ext +
                                             "\"");
 
-            config.sourcePath = file;
+            config.sourcePath = fileName;
         } else if (arg == "--height" && i + 1 < argc) {
             try {
                 const int val = std::stoi(argv[++i]);
@@ -66,7 +67,7 @@ Config parseArgs(int argc, char **argv) {
 
 #ifndef NDEBUG
     std::cerr << "---ArgsConfig---\n";
-    std::cerr << "fileName \t= " << config.sourcePath.filename() << "\n";
+    std::cerr << "fileName \t= " << config.sourcePath << "\n";
     std::cerr << "height \t= " << config.height << "\n";
     std::cerr << "width \t= " << config.width << "\n";
     std::cerr << "grey \t= " << std::boolalpha << config.grey << "\n";

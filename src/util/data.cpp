@@ -1,12 +1,13 @@
-#include <sys/ioctl.h>
-#include <unistd.h>
-
 #include "data.hpp"
 
 void updateCameraSize(AppData &data, const cv::VideoCapture &cap) {
     data.sourceWidth = static_cast<int>(cap.get(cv::CAP_PROP_FRAME_WIDTH));
     data.sourceHeight = static_cast<int>(cap.get(cv::CAP_PROP_FRAME_HEIGHT));
 }
+
+#ifndef _WIN32
+#include <sys/ioctl.h>
+#include <unistd.h>
 
 void updateTerminalSize(AppData &data) {
     struct winsize ws;
@@ -15,6 +16,18 @@ void updateTerminalSize(AppData &data) {
     data.termWidth = ws.ws_col;
     data.termHeight = ws.ws_row;
 }
+#else
+#include <windows.h>
+
+void updateTerminalSize(AppData &data) {
+    HANDLE h = GetStdHandle(STD_OUTPUT_HANDLE);
+    CONSOLE_SCREEN_BUFFER_INFO info;
+    GetConsoleScreenBufferInfo(h, &info);
+
+    data.termWidth = info.srWindow.Right - info.srWindow.Left + 1;
+    data.termHeight = info.srWindow.Bottom - info.srWindow.Top + 1;
+}
+#endif // _WIN32
 
 void computeImageSize(AppData &data) {
     // width * 2 to account for terminal character heights

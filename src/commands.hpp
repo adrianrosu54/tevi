@@ -4,4 +4,4 @@
 
 void runPrint(const Config &config = Config());
 
-void runLive(const Config &config);
+void runStream(const Config &config = Config());

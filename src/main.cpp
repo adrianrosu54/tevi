@@ -1,13 +1,23 @@
 #include <iostream>
 #include <string>
 
+#ifdef _WIN32
+#include <windows.h>
+#endif // _WIN32
+
 #include "args.hpp"
-#include "print.hpp"
+#include "commands.hpp"
 #include "util/logging.hpp"
 
 int main(int argc, char *argv[]) {
+
+#ifdef _WIN32
+    // Enable UTF-8 encoding on Windows
+    SetConsoleOutputCP(CP_UTF8);
+#endif // _WIN32
+
     if (argc < 2) {
-        return logAndHandleErrors([]() { runPrint(); });
+        return logAndHandleErrors([]() { runStream(); });
     }
 
     std::string command{argv[1]};
@@ -17,10 +27,10 @@ int main(int argc, char *argv[]) {
             Config config(parseArgs(argc, argv));
             runPrint(config);
         });
-    } else if (command == "live") {
+    } else if (command == "stream") {
         return logAndHandleErrors([&]() {
             Config config(parseArgs(argc, argv));
-            runLive(config);
+            runStream(config);
         });
     } else if (command == "--version") {
         std::cout << "version: " TEVI_VERSION "\n";

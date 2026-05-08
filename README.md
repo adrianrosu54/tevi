@@ -1,21 +1,33 @@
 # TeVi
 
-TeVi is a CLI application for displaying webcam image input directly in the
-terminal. It enables the user to print images to the screen using **ANSI escape
-sequences**.
+***TeVi*** (Text-View) is a CLI application for displaying webcam image input
+directly in the terminal. It enables the user to print images to the screen
+using **ANSI escape sequences**.
 
 ## Usage
 
-Print capture from webcam input:
+Stream webcam input to the terminal
+
+```bash
+tevi stream
+```
+
+Stream as **ASCII** text with 80 character width
+
+```bash
+tevi stream --ascii --grey --width 80
+```
+
+Print a single webcam capture:
 
 ```bash
 tevi print
 ```
 
-Print photo `image.jpg` as greyscale **ASCII** text to screen:
+Render photo `image.jpg` as colored **ASCII** text to screen:
 
 ```bash
-tevi print --file image.jpg --ascii --grey
+tevi print --file image.jpg --ascii
 ```
 
 ## Building from source
@@ -27,7 +39,7 @@ variable
 * **clang**, **ninja**, **cmake** installed
 
 ```bash
-cmake --preset release
+cmake --preset linux-release
 cmake --build build
 ./build/tevi
 ```

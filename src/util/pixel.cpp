@@ -1,13 +1,15 @@
-#include "util/pixel.hpp"
 #include <string>
 
+#include "util/pixel.hpp"
+
 const char *charGradient = " .:-!+|=*xzk#M%@$";
+const char *unicodeTopHalfBlock = "\xe2\x96\x80";
 
 // luminance formula
 int luminance(const cv::Vec3b &pixel) {
     return static_cast<int>(0.299 * pixel[2] + 0.587 * pixel[1] +
                             0.114 * pixel[2]);
-};
+}
 
 void paintColorBlock(std::string &buffer, const cv::Mat &frame, int row,
                      int col) {
@@ -20,7 +22,7 @@ void paintColorBlock(std::string &buffer, const cv::Mat &frame, int row,
               std::to_string(top[0]) + ";";
     buffer += "48;2;";
     buffer += std::to_string(bot[2]) + ";" + std::to_string(bot[1]) + ";" +
-              std::to_string(bot[0]) + "m▀";
+              std::to_string(bot[0]) + "m" + unicodeTopHalfBlock;
 }
 
 void paintGreyBlock(std::string &buffer, const cv::Mat &frame, int row,
@@ -34,7 +36,7 @@ void paintGreyBlock(std::string &buffer, const cv::Mat &frame, int row,
     buffer += "\033[38;2;" + std::to_string(lt) + ";" + std::to_string(lt) +
               ";" + std::to_string(lt) + ";";
     buffer += "48;2;" + std::to_string(lb) + ";" + std::to_string(lb) + ";" +
-              std::to_string(lb) + "m▀";
+              std::to_string(lb) + "m" + unicodeTopHalfBlock;
 }
 
 void paintColorAscii(std::string &buffer, const cv::Mat &frame, int row,

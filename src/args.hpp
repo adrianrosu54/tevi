@@ -1,8 +1,6 @@
 #pragma once
 
-#include <filesystem>
-
-namespace fs = std::filesystem;
+#include <string>
 
 enum class Source {
     CAMERA,
@@ -11,7 +9,7 @@ enum class Source {
 };
 
 struct Config {
-    fs::path sourcePath{};
+    std::string sourcePath{};
     Source sourceType{Source::CAMERA};
     int height{0};
     int width{0};
