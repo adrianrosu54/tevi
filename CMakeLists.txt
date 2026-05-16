@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.29)
 
 project(tevi
-    VERSION 1.1.0
+    VERSION 1.1.1
     LANGUAGES CXX
 )
 
@@ -35,8 +35,3 @@ target_link_libraries(tevi PRIVATE
 target_compile_definitions(tevi PRIVATE
     TEVI_VERSION="${PROJECT_VERSION}"
 )
-
-# static linking
-if(UNIX AND NOT APPLE)
-    target_link_options(tevi PRIVATE -static-libgcc -static-libstdc++)
-endif()

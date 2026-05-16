@@ -36,7 +36,7 @@ Config parseArgs(int argc, char **argv) {
                                             "\"");
 
             config.sourcePath = fileName;
-        } else if (arg == "--height" && i + 1 < argc) {
+        } else if ((arg == "--height" || arg == "-h") && i + 1 < argc) {
             try {
                 const int val = std::stoi(argv[++i]);
                 if (val > 0)
@@ -46,7 +46,7 @@ Config parseArgs(int argc, char **argv) {
             } catch (std::invalid_argument) {
                 throw std::invalid_argument("invalid height");
             }
-        } else if (arg == "--width" && i + 1 < argc) {
+        } else if ((arg == "--width" || arg == "-w") && i + 1 < argc) {
             try {
                 const int val = std::stoi(argv[++i]);
                 if (val > 0)

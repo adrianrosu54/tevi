@@ -17,8 +17,8 @@ Options:
         --ascii             Print as ascii text
         --grey              Display as greyscale
 
-        --help              Show this message and exit
-        --version           Display project version
+    -h  --help              Show this message and exit
+    -v  --version           Display project version
 
 )";
 }

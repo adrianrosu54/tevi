@@ -42,7 +42,7 @@ z!!!!!-!!--!-!-!--!kx*=xk*zkkxx|-!=zzMMkzx*==||==xxz#M%%%%%#kzzzkk#MMMMMMMMM##M
 
 ### CLI flags
 
-* Image file viewer: `--file [file]`
+* Image file viewer: `--file <file>`
   * supports JPEG and PNG images
 * **ASCII** mode: `--ascii`
 * greyscale display: `--gray`/`--grey`

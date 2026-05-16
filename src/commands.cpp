@@ -94,12 +94,23 @@ void runStream(const Config &config) {
     std::atexit(restoreTerminal);
     std::signal(SIGINT, handleSignal);
 
+    int prevTermHeight{};
+    int prevTermWidth{};
+
     bool running = true;
     while (running) {
         data.sourceFrame = fetch();
 
+        prevTermHeight = data.termHeight;
+        prevTermWidth = data.termWidth;
+
         updateTerminalSize(data);
         data.termHeight -= 1; // account for prompt line in CLI
+
+        // clear on resize
+        if (data.termWidth != prevTermWidth ||
+            data.termHeight != prevTermHeight)
+            std::cout << "\033[2J";
 
         updateProjectionSize(config, data);
 

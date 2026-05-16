@@ -32,9 +32,9 @@ int main(int argc, char *argv[]) {
             Config config(parseArgs(argc, argv));
             runStream(config);
         });
-    } else if (command == "--version") {
+    } else if (command == "--version" || command == "-v") {
         std::cout << "version: " TEVI_VERSION "\n";
-    } else if (command == "--help") {
+    } else if (command == "--help" || command == "-h") {
         printHelp();
     } else {
         printHelp();
